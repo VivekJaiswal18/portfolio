@@ -28,10 +28,12 @@ import {
   HiOutlineMagnifyingGlass,
   HiOutlinePaperAirplane,
   HiOutlineBolt,
+  HiOutlineClock,
 } from 'react-icons/hi2'
 import { FiMail } from 'react-icons/fi'
-import profileImage from './assets/profile-placeholder.svg'
 import './App.css'
+
+const profileImage = '/finale.jpg'
 
 function App() {
   const [theme, setTheme] = useState('dark')
@@ -50,6 +52,20 @@ function App() {
   const [paletteQuery, setPaletteQuery] = useState('')
   const [paletteIndex, setPaletteIndex] = useState(0)
   const paletteInputRef = useRef(null)
+
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  const istTime = now.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Kolkata',
+  })
 
   const years = [2026, 2025, 2024, 2023, 2022]
   const GITHUB_USER = 'VivekJaiswal18'
@@ -307,8 +323,32 @@ function App() {
     [],
   )
 
+  const commonItems = useMemo(
+    () => [
+      {
+        id: 'send-email',
+        label: 'send email',
+        desc: 'open mail composer',
+        run: () => {
+          window.location.href = 'mailto:vivekjaiswalfrl@gmail.com'
+        },
+      },
+    ],
+    [theme],
+  )
+
   const actionItems = useMemo(
     () => [
+      {
+        id: 'copy-email',
+        label: 'copy email',
+        desc: 'vivekjaiswalfrl@gmail.com',
+        run: () => {
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText('vivekjaiswalfrl@gmail.com').catch(() => {})
+          }
+        },
+      },
       {
         id: 'toggle-theme',
         label: 'toggle theme',
@@ -339,49 +379,40 @@ function App() {
         desc: '@vivekjaiswal18',
         run: () => window.open('https://t.me/vivekjaiswal18', '_blank', 'noopener'),
       },
-      {
-        id: 'copy-email',
-        label: 'copy email',
-        desc: 'vivek@yourdomain.com',
-        run: () => {
-          if (navigator.clipboard) {
-            navigator.clipboard.writeText('vivek@yourdomain.com').catch(() => {})
-          }
-        },
-      },
-      {
-        id: 'send-email',
-        label: 'send email',
-        desc: 'open mail composer',
-        run: () => {
-          window.location.href = 'mailto:vivek@yourdomain.com'
-        },
-      },
     ],
     [theme],
   )
 
-  const filteredNavigation = useMemo(() => {
+  const filterByQuery = (items) => {
     const q = paletteQuery.trim().toLowerCase()
-    if (!q) return navigationItems
-    return navigationItems.filter(
+    if (!q) return items
+    return items.filter(
       (item) =>
         item.label.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q),
     )
-  }, [paletteQuery, navigationItems])
+  }
 
-  const filteredActions = useMemo(() => {
-    const q = paletteQuery.trim().toLowerCase()
-    if (!q) return actionItems
-    return actionItems.filter(
-      (item) =>
-        item.label.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q),
-    )
-  }, [paletteQuery, actionItems])
+  const filteredCommon = useMemo(
+    () => filterByQuery(commonItems),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [paletteQuery, commonItems],
+  )
+
+  const filteredNavigation = useMemo(
+    () => filterByQuery(navigationItems),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [paletteQuery, navigationItems],
+  )
+
+  const filteredActions = useMemo(
+    () => filterByQuery(actionItems),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [paletteQuery, actionItems],
+  )
 
   const flatPaletteItems = useMemo(
-    () => [...filteredNavigation, ...filteredActions],
-    [filteredNavigation, filteredActions],
+    () => [...filteredCommon, ...filteredNavigation, ...filteredActions],
+    [filteredCommon, filteredNavigation, filteredActions],
   )
 
   const selectPaletteItem = useCallback(
@@ -431,8 +462,13 @@ function App() {
   return (
     <main className="page" id="home">
       <header className="topbar">
-        <p className="topbar-left">EST. 20XX</p>
+        <p className="topbar-left">EST. 2003</p>
         <div className="topbar-right">
+          <span className="clock" aria-label="Current time in IST">
+            <HiOutlineClock className="clock-icon" />
+            <span className="clock-time">{istTime}</span>
+            <span className="clock-tz">GMT+5:30</span>
+          </span>
           <button
             aria-label="Open command palette"
             className="search-pill"
@@ -452,18 +488,21 @@ function App() {
       <section className="hero">
         <img className="avatar" src={profileImage} alt="Profile placeholder" />
         <h1 className="hero-name">
-          vivekjaiswal18 <span className="verified">●</span>
+           vivekjaiswal18 <span className="verified">{/*●*/}</span> 
         </h1>
         <p className="hero-role">full-stack developer // co-founder @ your-startup</p>
         <p className="hero-copy">
-          hey, i&apos;m vivek, a full-stack engineer building scalable products
+          hey, i&apos;m vivek, Backend and systems-focused engineer with experience 
+          building rust-based high-performance low-latency trading infrastructure. 
+          Strong background in concurrency, real-time systems, and blockchain-based 
+          execution environments.
+          {/* a full-stack engineer building scalable products  
           and robust backend systems. i work across modern web stacks with a
-          strong focus on clean architecture and performance.
+          strong focus on clean architecture and performance. */}
         </p>
         <p className="hero-copy">
-          currently exploring distributed systems, backend reliability, and
-          better developer experience. i also write technical notes and share
-          production learnings from real projects.
+          currently exploring distributed systems, full stack, backend reliability, and
+          better developer experience.
         </p>
         <div className="github-mini">
           <p>
@@ -758,29 +797,53 @@ function App() {
               />
             </div>
             <ul className="palette-list">
+              {filteredCommon.length ? (
+                <li className="palette-section-title">common</li>
+              ) : null}
+              {filteredCommon.map((item, index) => {
+                const flatIndex = index
+                return (
+                  <li
+                    key={item.id}
+                    className={`palette-item ${paletteIndex === flatIndex ? 'active' : ''}`}
+                    onMouseEnter={() => setPaletteIndex(flatIndex)}
+                    onClick={() => selectPaletteItem(item)}
+                  >
+                    <HiOutlineBolt className="palette-item-icon" />
+                    <span className="palette-item-text">
+                      <span className="palette-item-title">{item.label}</span>
+                      <span className="palette-item-desc">{item.desc}</span>
+                    </span>
+                  </li>
+                )
+              })}
+
               {filteredNavigation.length ? (
                 <li className="palette-section-title">navigation</li>
               ) : null}
-              {filteredNavigation.map((item, index) => (
-                <li
-                  key={item.id}
-                  className={`palette-item ${paletteIndex === index ? 'active' : ''}`}
-                  onMouseEnter={() => setPaletteIndex(index)}
-                  onClick={() => selectPaletteItem(item)}
-                >
-                  <HiOutlinePaperAirplane className="palette-item-icon" />
-                  <span className="palette-item-text">
-                    <span className="palette-item-title">{item.label}</span>
-                    <span className="palette-item-desc">{item.desc}</span>
-                  </span>
-                </li>
-              ))}
+              {filteredNavigation.map((item, index) => {
+                const flatIndex = filteredCommon.length + index
+                return (
+                  <li
+                    key={item.id}
+                    className={`palette-item ${paletteIndex === flatIndex ? 'active' : ''}`}
+                    onMouseEnter={() => setPaletteIndex(flatIndex)}
+                    onClick={() => selectPaletteItem(item)}
+                  >
+                    <HiOutlinePaperAirplane className="palette-item-icon" />
+                    <span className="palette-item-text">
+                      <span className="palette-item-title">{item.label}</span>
+                      <span className="palette-item-desc">{item.desc}</span>
+                    </span>
+                  </li>
+                )
+              })}
 
               {filteredActions.length ? (
                 <li className="palette-section-title">actions</li>
               ) : null}
               {filteredActions.map((item, index) => {
-                const flatIndex = filteredNavigation.length + index
+                const flatIndex = filteredCommon.length + filteredNavigation.length + index
                 return (
                   <li
                     key={item.id}

@@ -10,26 +10,65 @@
 }
 
 .topbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-  margin-bottom: 20px;
-  gap: 12px;
+  padding: 10px 0;
+  margin-top: 25px;
+  margin-bottom: 22px;
+  gap: 16px;
+  min-height: 54px;
 }
 
 .topbar-left {
-  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  font-size: 13px;
   letter-spacing: 0.12em;
+  line-height: 1;
   text-transform: uppercase;
   color: var(--muted);
   white-space: nowrap;
+  transform: translateY(5px);
 }
 
 .topbar-right {
   display: flex;
   align-items: center;
+  min-height: 34px;
+  gap: 10px;
+  justify-self: end;
+}
+
+.clock {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
   gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-feature-settings: 'tnum' 1;
+  line-height: 1;
+}
+
+.clock-icon {
+  font-size: 14px;
+}
+
+.clock-time {
+  color: var(--text);
+  letter-spacing: 0.04em;
+}
+
+.clock-tz {
+  color: var(--muted);
+}
+
+@media (max-width: 480px) {
+  .clock-tz {
+    display: none;
+  }
 }
 
 .search-pill {
@@ -41,7 +80,7 @@
   color: var(--muted);
   border-radius: 999px;
   padding: 5px 8px 5px 10px;
-  height: 30px;
+  height: 34px;
   font-size: 12px;
   cursor: pointer;
   transition: border-color 0.18s ease, color 0.18s ease;
@@ -253,12 +292,13 @@
 }
 
 .avatar {
-  width: 58px;
-  height: 58px;
-  border-radius: 11px;
+  width: 82px;
+  height: 82px;
+  border-radius: 14px;
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   border: 1px solid var(--border);
+  object-fit: cover;
 }
 
 .hero-name {
@@ -266,6 +306,7 @@
   font-size: 31px;
   line-height: 1.1;
   color: var(--heading);
+  margin-top: 18px;
 }
 
 .verified {
@@ -284,8 +325,10 @@
   max-width: 62ch;
   margin-bottom: 8px;
   color: var(--muted);
-  font-size: 14px;
+  /* font-size: 14px; */
+  font-size: 16px;
   text-transform: lowercase;
+  margin-top: 18px;
 }
 
 .github-mini {
@@ -330,18 +373,18 @@
 }
 
 .block {
-  margin-top: 28px;
+  margin-top: 56px;
   margin-bottom: 24px;
-  scroll-margin-top: 32px;
+  scroll-margin-top: 40px;
 }
 
 .page,
 .hero {
-  scroll-margin-top: 32px;
+  scroll-margin-top: 40px;
 }
 
 .hero {
-  margin-bottom: 28px;
+  margin-bottom: 48px;
 }
 
 .stack-icons {
