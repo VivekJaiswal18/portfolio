@@ -33,7 +33,7 @@ import {
 import { FiMail } from 'react-icons/fi'
 import './App.css'
 
-const profileImage = '/avatar.jpg'
+const profileImage = '/profile_avatar.jpg'
 
 function App() {
   const [theme, setTheme] = useState('dark')
