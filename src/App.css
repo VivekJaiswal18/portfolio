@@ -30,7 +30,7 @@
   text-transform: uppercase;
   color: var(--muted);
   white-space: nowrap;
-  transform: translateY(5px);
+  transform: translateY(6px);
 }
 
 .topbar-right {
